@@ -1,10 +1,9 @@
 package br.com.unisales.locadora.controller;
 
 import br.com.unisales.locadora.model.Jogo;
-import br.com.unisales.locadora.repository.JogoRepository;
+import br.com.unisales.locadora.service.JogoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -12,32 +11,25 @@ import java.util.List;
 public class JogoController {
 
     @Autowired
-    private JogoRepository repo;
+    private JogoService service;
 
     @GetMapping
-    public List <Jogo> listar() {
-        return repo.findAll();
+    public List<Jogo> listar() {
+        return service.listar();
     }
 
     @PostMapping
     public Jogo criar(@RequestBody Jogo jogo) {
-        return repo.save(jogo);
+        return service.criar(jogo);
     }
 
     @PutMapping("/{id}")
     public Jogo atualizar(@PathVariable Long id, @RequestBody Jogo jogoDados) {
-        Jogo jogoBusca = repo.findById(id).orElse(null);
-        if(jogoBusca != null) {
-            jogoBusca.setTitulo(jogoDados.getTitulo());
-            jogoBusca.setGenero(jogoDados.getGenero());
-            jogoBusca.setPrecoDiaria(jogoDados.getPrecoDiaria());
-            return repo.save(jogoBusca);
-        }
-        return null;
+        return service.atualizar(id, jogoDados);
     }
 
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
-        repo.deleteById(id);
+        service.deletar(id);
     }
 }

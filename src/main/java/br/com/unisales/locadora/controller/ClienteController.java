@@ -1,11 +1,10 @@
 package br.com.unisales.locadora.controller;
 
 import br.com.unisales.locadora.model.Cliente;
-import br.com.unisales.locadora.repository.ClienteRepository;
+import br.com.unisales.locadora.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -13,16 +12,16 @@ import java.util.List;
 public class ClienteController {
 
     @Autowired
-    private ClienteRepository repository;
-    
+    private ClienteService service;
+
     @GetMapping
     public List<Cliente> listar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @PostMapping
     public Cliente cadastrar(@RequestBody Cliente cliente) {
-        return repository.save(cliente);
+        return service.cadastrar(cliente);
     }
 
     @GetMapping(value = "/boasvindas", produces = MediaType.TEXT_HTML_VALUE)
@@ -32,7 +31,7 @@ public class ClienteController {
 
     @DeleteMapping("/{id}")
     public String deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+        service.deletar(id);
         return "Cliente com ID " + id + " deletado com sucesso! (Mesmo sem checar se você é ADMIN)";
     }
 }
